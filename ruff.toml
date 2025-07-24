@@ -1,0 +1,24 @@
+fix = true
+target-version = "py313"
+
+[format]
+docstring-code-format = true
+
+[lint]
+select = ["ALL"]
+ignore = ["D100", "D104", "INP"]
+
+[lint.isort]
+known-local-folder = ["hdx.geo"]
+known-third-party = [
+    "hdx.api",
+    "hdx.data",
+    "hdx.database",
+    "hdx.facades",
+    "hdx.location",
+    "hdx.scraper",
+    "hdx.utilities",
+]
+
+[lint.pydocstyle]
+convention = "google"
