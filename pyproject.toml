@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "duckdb",
     "geopandas",
     "httpx[http2]",
     "pyarrow",
@@ -16,6 +17,7 @@ dependencies = [
 dev = ["ruff", "taskipy"]
 
 [tool.taskipy.tasks]
-app = "python -m src.hdx.geo"
+esri = "python -m src.hdx.geo.esri"
+parquet = "python -m src.hdx.geo.parquet"
 export = "uv sync -q && uv export -q -o requirements.txt --no-dev --no-hashes"
 ruff = "ruff format && ruff check && ruff format"

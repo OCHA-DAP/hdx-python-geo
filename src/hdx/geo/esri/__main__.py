@@ -2,8 +2,8 @@ import argparse
 from logging import INFO, basicConfig
 from os import getenv
 
+from ..config import DEFAULT_EXTENSION
 from . import download
-from .config import DEFAULT_EXTENSION
 from .utils import generate_token
 
 basicConfig(level=INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -13,24 +13,28 @@ def main() -> None:
     """Main function."""
     parser = argparse.ArgumentParser(description="Download ESRI data.")
     parser.add_argument(
-        "--url",
+        "--arcgis-url",
         help="ArcGIS URL, e.g. https://gis.example.org/server/rest/services",
     )
-    parser.add_argument("--username", help="ArcGIS Username")
-    parser.add_argument("--password", help="ARCGIS Password")
-    parser.add_argument("--extension", help="Output Extension")
+    parser.add_argument("--arcgis-username", help="ArcGIS Username")
+    parser.add_argument("--arcgis-password", help="ARCGIS Password")
+    parser.add_argument("--output-extension", help="Output Extension")
     parser.add_argument("--regex-url", help="Regex to filter URLs")
     parser.add_argument("--regex-layer", help="Regex to filter layers")
 
     args = parser.parse_args()
-    url = args.url if args.url else getenv("URL", "")
-    username = args.username if args.username else getenv("USERNAME", "")
-    password = args.password if args.password else getenv("PASSWORD", "")
+    url = args.arcgis_url if args.arcgis_url else getenv("ARCGIS_URL", "")
+    username = (
+        args.arcgis_username if args.arcgis_username else getenv("ARCGIS_USERNAME", "")
+    )
+    password = (
+        args.arcgis_password if args.arcgis_password else getenv("ARCGIS_PASSWORD", "")
+    )
     extension = (
-        args.extension
-        if args.extension
-        else getenv("EXTENSION", "")
-        if getenv("EXTENSION")
+        args.output_extension
+        if args.output_extension
+        else getenv("OUTPUT_EXTENSION", "")
+        if getenv("OUTPUT_EXTENSION")
         else DEFAULT_EXTENSION
     )
     regex_url = (

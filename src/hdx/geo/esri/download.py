@@ -1,10 +1,9 @@
 from pathlib import Path
 from re import search
+from subprocess import run
 from urllib.parse import urlencode
 
-from geopandas import read_file
-
-from .config import OBJECTID, data_dir
+from ..config import OBJECTID, data_dir
 from .utils import client_get
 
 
@@ -37,16 +36,15 @@ def download_feature(
     query_url = f"{url}/query?{urlencode(query)}"
     output_file = data_dir / prefix / f"{layer_name}{extension}"
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    gdf = read_file("ESRIJSON:" + query_url, use_arrow=True)
-    if extension == ".parquet":
-        gdf.to_parquet(
-            output_file,
-            compression="zstd",
-            write_covering_bbox=True,
-            schema_version="1.1.0",
-        )
-    else:
-        gdf.to_file(output_file)
+    run(
+        [
+            *["gdal", "vector", "convert"],
+            *["ESRIJSON:" + query_url, output_file],
+            "--overwrite",
+            "--lco=COMPRESSION=ZSTD",
+        ],
+        check=False,
+    )
 
 
 def download_layers(
@@ -79,13 +77,13 @@ def download_services(
             service_name = service["name"].split("/")[-1]
             new_prefix = str(Path(prefix) / service_name)
             layers_url = f"{url}/{service_name}/FeatureServer"
-            response = client_get(layers_url, params).json()
-            download_layers(layers_url, extension, params, response, regex, new_prefix)
+            layers_r = client_get(layers_url, params).json()
+            download_layers(layers_url, extension, params, layers_r, regex, new_prefix)
     for folder in response["folders"]:
         service_url = f"{url}/{folder['name']}"
         new_prefix = str(Path(prefix) / folder["name"])
-        response = client_get(service_url, params).json()
-        download_services(service_url, extension, params, response, regex, new_prefix)
+        service_r = client_get(service_url, params).json()
+        download_services(service_url, extension, params, service_r, regex, new_prefix)
 
 
 def main(url: str, token: str, extension: str, regex: dict) -> None:
