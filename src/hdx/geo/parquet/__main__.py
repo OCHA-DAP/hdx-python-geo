@@ -31,7 +31,7 @@ def convert(input_path: Path, input_glob: str) -> None:
 
 
 def main() -> None:
-    """Main function."""
+    """Parse arguments and convert."""
     parser = argparse.ArgumentParser(description="Download ESRI data.")
     parser.add_argument("--input-path", help="Input Path, filesystem or URL")
     parser.add_argument("--input-glob", help="Input Glob")

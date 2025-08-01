@@ -10,7 +10,7 @@ basicConfig(level=INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 def main() -> None:
-    """Main function."""
+    """Parse arguments and download data."""
     parser = argparse.ArgumentParser(description="Download ESRI data.")
     parser.add_argument(
         "--arcgis-url",

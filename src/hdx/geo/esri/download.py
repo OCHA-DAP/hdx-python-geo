@@ -23,7 +23,7 @@ def download_feature(
     response: dict,
     prefix: str = "",
 ) -> None:
-    """Downloads a GeoJSON from a Feature Layer."""
+    """Download a GeoJSON from a Feature Layer."""
     layer_name = response["name"]
     fields = response["fields"]
     objectid, field_names = parse_fields(fields)
@@ -55,7 +55,7 @@ def download_layers(
     regex: dict,
     prefix: str = "",
 ) -> None:
-    """Downloads all GeoJSONs from a Feature Service."""
+    """Download all GeoJSONs from a Feature Service."""
     for layer in response["layers"]:
         if layer["type"] == "Feature Layer" and search(regex["layer"], layer["name"]):
             feature_url = f"{url}/{layer['id']}"
@@ -71,7 +71,7 @@ def download_services(
     regex: dict,
     prefix: str = "",
 ) -> None:
-    """Downloads all GeoJSONs from Feature Services."""
+    """Download all GeoJSONs from Feature Services."""
     for service in response["services"]:
         if service["type"] == "FeatureServer" and search(regex["url"], service["name"]):
             service_name = service["name"].split("/")[-1]
